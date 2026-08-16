@@ -26,7 +26,11 @@
         </button>
       </nav>
 
-      <button class="ghost-button" @click="logoutPrototype">
+      <button
+        v-if="session === 'Admin'"
+        class="ghost-button"
+        @click="logoutPrototype"
+      >
         {{ t('logout') }}
       </button>
     </aside>
@@ -41,10 +45,6 @@
         <div class="top-actions">
           <button @click="toggleLanguage">
             {{ language === 'en' ? 'BM' : 'EN' }}
-          </button>
-
-          <button @click="screen = 'auth'; authMode = 'login'">
-            {{ t('userLogin') }}
           </button>
 
           <button class="primary" @click="screen = 'auth'; authMode = 'admin'">
@@ -122,16 +122,12 @@
           </dl>
 
           <button
-            v-if="selectedDoc.access === 'Public'"
             class="primary full"
             @click="openDocumentDetails(selectedDoc)"
           >
             {{ t('openPublicDetails') }}
           </button>
 
-          <button v-else class="primary full" @click="screen = 'auth'">
-            {{ t('registerLoginAccess') }}
-          </button>
         </div>
 
         <div class="wide-card">
@@ -141,9 +137,6 @@
               <h3>{{ filteredDocs.length }} {{ t('documentsFound') }}</h3>
             </div>
 
-            <button @click="screen = 'auth'; authMode = 'register'">
-              {{ t('requestRegistration') }}
-            </button>
           </div>
 
           <div class="doc-grid">
@@ -469,8 +462,7 @@
           <div class="avatar">NA</div>
           <h3>{{ profileForm.name }}</h3>
           <p>{{ profileForm.email }}</p>
-          <span class="status-pill green">{{ t('activeRegisteredUser') }}</span>
-
+            <span class="status-pill green">{{ t('administrator') }}</span>
           <dl>
             <div>
               <dt>{{ t('department') }}</dt>
@@ -488,8 +480,8 @@
         </div>
 
         <div class="detail-card">
-          <p class="eyebrow">{{ t('profileManagement') }}</p>
-          <h3>{{ t('manageUserProfile') }}</h3>
+          <p class="eyebrow">{{ t('adminProfile') }}</p>
+          <h3>{{ t('manageAdminProfile') }}</h3>
 
           <InputField
             v-model="profileForm.name"
@@ -553,13 +545,6 @@
               @click="toggleMfa"
             />
 
-            <SettingCard
-              :title="t('deactivateAccount')"
-              :desc="t('requestAccountDeactivation')"
-              :action="t('request')"
-              danger
-              @click="deactivationModalOpen = true"
-            />
           </div>
         </div>
 
@@ -1062,7 +1047,6 @@
     </button>
 
     <button
-      v-if="session === 'User' || session === 'Admin'"
       class="secondary"
       @click="downloadDocument(doc)"
     >
@@ -2834,7 +2818,7 @@ function showToast(message, type = 'success') {
   toastType.value = type
 }
 
-const language = useLocalStorage('jhr_language', 'en')
+const language = useLocalStorage('jhr_language', 'ms')
 
 const translations = {
   en: {
@@ -2876,7 +2860,7 @@ const translations = {
     // Navigation
     navPublic: 'Public Portal',
     navAuth: 'Login / Register',
-    navProfile: 'Profile & Security',
+    navProfile: 'Admin Profile',
     navDocuments: 'Document Management',
     navSmart: 'Smart Support',
     navPersonal: 'Notifications & Saved',
@@ -3045,6 +3029,9 @@ const translations = {
     suspend: 'Suspend',
     reactivate: 'Reactivate',
     filterLogs: 'Filter Logs',
+    adminProfile: 'Admin Profile',
+    manageAdminProfile: 'Manage Admin Profile',
+    administrator: 'Administrator',
 
     // Document Management
     documentManagement: 'Document Management',
@@ -3316,7 +3303,7 @@ const translations = {
     // Navigation
     navPublic: 'Portal Awam',
     navAuth: 'Log Masuk / Daftar',
-    navProfile: 'Profil & Keselamatan',
+    navProfile: 'Profil Admin',
     navDocuments: 'Pengurusan Dokumen',
     navSmart: 'Sokongan Pintar',
     navPersonal: 'Notifikasi & Simpanan',
@@ -3485,6 +3472,9 @@ const translations = {
     suspend: 'Gantung',
     reactivate: 'Aktifkan Semula',
     filterLogs: 'Tapis Log',
+    adminProfile: 'Profil Admin',
+    manageAdminProfile: 'Urus Profil Admin',
+    administrator: 'Pentadbir',
 
     // Document Management
     documentManagement: 'Pengurusan Dokumen',
@@ -3750,10 +3740,12 @@ function toggleLanguage() {
 
 const visibleNavItems = computed(() => {
   if (session.value === 'Admin') {
-    return navItems
+    return navItems.filter((item) => item.id !== 'auth')
   }
 
-  return navItems.filter((item) => item.id !== 'admin')
+  return navItems.filter(
+    (item) => !['auth', 'profile', 'admin'].includes(item.id)
+  )
 })
 
 const repoQuery = ref('')
@@ -3990,14 +3982,7 @@ const repositoryDocs = computed(() => {
   return documents.value.filter((doc) => {
 
     // Access Control
-    if (session.value === 'Guest' && doc.access !== 'Public') {
-      return false
-    }
-
-    if (
-      session.value === 'User' &&
-      doc.access === 'Restricted'
-    ) {
+    if (session.value !== 'Admin' && doc.access === 'Restricted') {
       return false
     }
 
