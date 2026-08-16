@@ -67,6 +67,18 @@ app.get('/api/documents/search/:keyword', async (req, res) => {
   }
 })
 
+app.get('/api/users', async (req, res) => {
+  try {
+    const [users] = await db.query(
+      'SELECT userId as id, fullName as name, email, role, designation, status FROM users'
+    );
+    res.json(users);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ error: 'Failed to fetch users from database' });
+  }
+});
+
 // Get recommendations from database
 app.get('/api/recommendations/:userId', async (req, res) => {
   try {

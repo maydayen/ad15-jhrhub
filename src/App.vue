@@ -229,9 +229,6 @@
                 {{ t('backToPublicPortal') }}
               </button>
 
-              <button @click="screen = 'auth'; authMode = 'register'; publicDetailsModalOpen = false">
-                {{ t('requestRegistration') }}
-              </button>
             </div>
           </div>
         </div>
@@ -261,16 +258,6 @@
         </div>
 
         <div class="auth-card">
-          <div class="tab-row">
-            <button
-              v-for="tab in authTabs"
-              :key="tab.id"
-              :class="{ selected: authMode === tab.id }"
-              @click="authMode = tab.id"
-            >
-              {{ t(tab.labelKey) }}
-            </button>
-          </div>
 
           <div v-if="authMode === 'login'" class="form-panel">
             <h3>{{ t('userLoginAccount') }}</h3>
@@ -745,42 +732,42 @@
             <label class="input-group">
               <span>{{ t('documentType') }} *</span>
               <select v-model="uploadForm.type">
-                <option>Circular</option>
-                <option>Guideline</option>
-                <option>Policy</option>
-                <option>Memo</option>
-                <option>Form</option>
-                <option>Reference Document</option>
-                <option>Administrative Decision</option>
+                <option value="Circular">{{ tv('Circular') }}</option>
+                <option value="Guideline">{{ tv('Guideline') }}</option>
+                <option value="Policy">{{ tv('Policy') }}</option>
+                <option value="Memo">{{ tv('Memo') }}</option>
+                <option value="Form">{{ tv('Form') }}</option>
+                <option value="Reference Document">{{ tv('Reference Document') }}</option>
+                <option value="Administrative Decision">{{ tv('Administrative Decision') }}</option>
               </select>
             </label>
             <label class="input-group">
               <span>{{ t('category') }} *</span>
               <select v-model="uploadForm.category">
-                <option>Leave Policy</option>
-                <option>Promotion</option>
-                <option>Discipline</option>
-                <option>Salary</option>
-                <option>Staff Benefits</option>
-                <option>Overseas Travel</option>
-                <option>Contract Service</option>
-                <option>Promotion and Discipline</option>
+                <option value="Leave Policy">{{ tv('Leave Policy') }}</option>
+                <option value="Promotion">{{ tv('Promotion') }}</option>
+                <option value="Discipline">{{ tv('Discipline') }}</option>
+                <option value="Salary">{{ tv('Salary') }}</option>
+                <option value="Staff Benefits">{{ tv('Staff Benefits') }}</option>
+                <option value="Overseas Travel">{{ tv('Overseas Travel') }}</option>
+                <option value="Contract Service">{{ tv('Contract Service') }}</option>
+                <option value="Promotion and Discipline">{{ tv('Promotion and Discipline') }}</option>
               </select>
             </label>
             <label class="input-group">
               <span>{{ t('accessLevel') }} *</span>
               <select v-model="uploadForm.access">
-                <option>Public</option>
-                <option>Registered</option>
-                <option>Restricted</option>
+                <option value="Public">{{ tv('Public') }}</option>
+                <option value="Registered">{{ tv('Registered') }}</option>
+                <option value="Restricted">{{ tv('Restricted') }}</option>
               </select>
             </label>
             <label class="input-group">
               <span>{{ t('language') }} *</span>
               <select v-model="uploadForm.language">
-                <option value="BM">Bahasa Malaysia</option>
-                <option value="EN">English</option>
-                <option value="BOTH">Both (BM &amp; EN)</option>
+                <option value="BM">{{ tv('Bahasa Malaysia') }}</option>
+                <option value="EN">{{ tv('English') }}</option>
+                <option value="BOTH">{{ tv('Both (BM & EN)') }}</option>
               </select>
             </label>
           </div>
@@ -2209,15 +2196,15 @@
             <table>
               <thead>
                 <tr>
-                <th>User</th>
-                <th>Department</th>
-                <th>Designation</th>
-                <th>Role</th>
-                <th>Status</th>
-                <th>Created At</th>
-                <th>Updated At</th>
-                <th>Action</th>
-              </tr>
+                  <th>{{ t('user') }}</th>
+                  <th>{{ t('department') }}</th>
+                  <th>{{ t('designation') }}</th>
+                  <th>{{ t('role') }}</th>
+                  <th>{{ t('status') }}</th>
+                  <th>{{ t('createdAt') }}</th>
+                  <th>{{ t('updatedAt') }}</th>
+                  <th>{{ t('action') }}</th>
+                </tr>
               </thead>
 
               <tbody>
@@ -2410,6 +2397,21 @@ async function loadDocuments() {
   }
 }
 
+async function loadUsers() {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/users`)
+
+    if (!response.ok) {
+      throw new Error('Failed to load users')
+    }
+
+    users.value = await response.json()
+  } catch (error) {
+    console.error(error)
+    showToast('Failed to load users from database.', 'error')
+  }
+}
+
 async function loadRecommendations() {
   try {
     const response = await fetch(`${API_BASE_URL}/api/recommendations/${currentUserId}`)
@@ -2591,6 +2593,7 @@ function closePreview() {
 
 onMounted(async () => {
   await loadDocuments()
+  await loadUsers()
   await loadRecommendations()
   await loadFaqs()
   await loadConversationHistory()
@@ -2604,81 +2607,9 @@ onMounted(async () => {
   await loadEscalationRequests()
 })
 
-const users = useLocalStorage('jhr_users', [
-  {
-    id: 'USR001',
-    name: 'Nur Aina Rahman',
-    email: 'aina@johor.gov.my',
-    department: 'Human Resource Management Division',
-    designation: 'Assistant Officer',
-    role: 'Registered User',
-    status: 'Active',
-    created_at: '2026-01-10 09:00 AM',
-    updated_at: '2026-01-10 09:00 AM'
-  },
-  {
-    id: 'USR002',
-    name: 'Daniel Tan',
-    email: 'daniel@johor.gov.my',
-    department: 'Finance Department',
-    designation: 'Officer',
-    role: 'Registered User',
-    status: 'Suspended',
-    created_at: '2026-01-12 10:30 AM',
-    updated_at: '2026-01-15 02:10 PM'
-  },
-  {
-    id: 'USR003',
-    name: 'Tung Ern',
-    email: 'tungern@johor.gov.my',
-    department: 'Knowledge and Document Management Unit',
-    designation: 'Document Officer',
-    role: 'Registered User',
-    status: 'Active',
-    created_at: '2026-01-05 10:00 AM',
-    updated_at: '2026-01-05 10:00 AM'
-  },
-  {
-    id: 'ADM001',
-    name: 'May Yan',
-    email: 'mayyan@johor.gov.my',
-    department: 'User and Access Management Unit',
-    designation: 'System Administrator',
-    role: 'Administrator',
-    status: 'Active',
-    created_at: '2026-01-01 08:30 AM',
-    updated_at: '2026-01-01 08:30 AM'
-  },
-  {
-    id: 'ADM002',
-    name: 'Yuan Man',
-    email: 'yuanman@johor.gov.my',
-    department: 'Intelligent Recommendation and Support Unit',
-    designation: 'AI Support Administrator',
-    role: 'Administrator',
-    status: 'Active',
-    created_at: '2026-01-14 11:20 AM',
-    updated_at: '2026-01-14 11:20 AM'
-  }
-])
+const users = ref([])
 
 const logs = useLocalStorage('jhr_logs', [
-  {
-    id: 'LOG-1001',
-    user: 'Nur Aina Rahman',
-    action: 'Login successful',
-    module: 'User Login',
-    time: 'Today, 09:14 AM',
-    result: 'Success'
-  },
-  {
-    id: 'LOG-1002',
-    user: 'Daniel Tan',
-    action: 'Failed login attempt',
-    module: 'Authentication',
-    time: 'Today, 08:58 AM',
-    result: 'Warning'
-  },
   {
     id: 'LOG-1003',
     user: 'May Yan',
@@ -2803,13 +2734,6 @@ const resetAccountType = ref('user')
 const session = ref('Guest')
 const toast = ref('Welcome to Johor HR Knowledge Hub interactive prototype.')
 const toastType = ref('success')
-
-const MAX_LOGIN_ATTEMPTS = 3
-
-const failedLoginAttempts = useLocalStorage('jhr_failed_login_attempts', {})
-const lockedPrototypeAccounts = useLocalStorage('jhr_locked_prototype_accounts', {})
-
-const loginLockMessage = ref('')
 
 function showToast(message, type = 'success') {
   toast.value = message
@@ -3036,7 +2960,7 @@ const translations = {
     documentManagementTitle: 'Upload, classify, store, search and manage HR documents.',
     administrators: 'Administrators',
     adminsDocumentDesc: 'Can upload official HR documents, review AI classification suggestions, manage the document repository and archive outdated circulars.',
-    guestUser: 'Guest & User',
+    guestUser: 'User',
     guestUserDocumentDesc: 'Browse, search and view HR documents available to your access level.',
     totalDocuments: 'Total Documents',
     pendingReview: 'Pending Review',
@@ -3479,7 +3403,7 @@ const translations = {
     documentManagementTitle: 'Muat naik, klasifikasi, simpan, cari dan urus dokumen HR.',
     administrators: 'Pentadbir',
     adminsDocumentDesc: 'Boleh memuat naik dokumen rasmi HR, menyemak cadangan klasifikasi AI, mengurus repositori dokumen dan mengarkibkan pekeliling lama.',
-    guestUser: 'Tetamu & Pengguna',
+    guestUser: 'Pengguna',
     guestUserDocumentDesc: 'Semak imbas, cari dan lihat dokumen HR yang tersedia mengikut tahap akses.',
     totalDocuments: 'Jumlah Dokumen',
     pendingReview: 'Menunggu Semakan',
@@ -3820,20 +3744,6 @@ const noteForm = ref({
   documentId: null,
   title: '',
   noteContent: ''
-})
-
-const loginForm = ref({
-  email: '',
-  password: '',
-  mfa: ''
-})
-
-const registerForm = ref({
-  name: '',
-  email: '',
-  department: '',
-  designation: '',
-  password: ''
 })
 
 const resetForm = ref({
