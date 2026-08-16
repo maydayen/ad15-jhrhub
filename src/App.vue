@@ -2772,8 +2772,6 @@ const navItems = [
 ]
 
 const authTabs = [
-  { id: 'login', labelKey: 'userLogin' },
-  { id: 'register', labelKey: 'register' },
   { id: 'admin', labelKey: 'adminLogin' }
 ]
 
@@ -2799,7 +2797,7 @@ const roleForm = ref({
   permissions: ''
 })
 //const selectedDoc = ref(documents.value[0])
-const authMode = ref('login')
+const authMode = ref('admin')
 const resetModalOpen = ref(false)
 const resetAccountType = ref('user')
 const session = ref('Guest')
