@@ -109,15 +109,15 @@
             </div>
             <div>
               <dt>{{ t('category') }}</dt>
-              <dd>{{ tv(selectedDoc.category) }}</dd>
+              <dd>{{ language === 'en' ? selectedDoc.category : selectedDoc.category_ms }}</dd>
             </div>
             <div>
               <dt>{{ t('type') }}</dt>
-              <dd>{{ tv(selectedDoc.type) }}</dd>
+              <dd>{{ language === 'en' ? selectedDoc.type : selectedDoc.type_ms }}</dd>
             </div>
             <div>
               <dt>{{ t('status') }}</dt>
-              <dd>{{ tv(selectedDoc.status) }}</dd>
+              <dd>{{ language === 'en' ? selectedDoc.status : selectedDoc.status_ms }}</dd>
             </div>
           </dl>
 
