@@ -100,7 +100,7 @@
           </div>
 
           <h3>{{ selectedDoc.title }}</h3>
-          <p>{{ selectedDoc.summary }}</p>
+          <p>{{ language === 'en' ? selectedDoc.summary_en : selectedDoc.summary_ms }}</p>
 
           <dl>
             <div>
@@ -216,7 +216,7 @@
 
             <div class="public-summary-box">
               <h4>{{ t('documentSummary') }}</h4>
-              <p>{{ selectedDoc.summary }}</p>
+              <p>{{ language === 'en' ? selectedDoc.summary_en : selectedDoc.summary_ms }}</p>
             </div>
 
             <div class="public-summary-box">
@@ -1276,7 +1276,7 @@
 
     <div class="summary-card">
       <h4>{{t('documentSummary')}}</h4>
-      <p>{{ previewDocument.summary }}</p>
+      <p>{{ language === 'en' ? previewDocument.summary_en : previewDocument.summary_ms }}</p>
     </div>
 
     <div class="button-row">
@@ -1351,7 +1351,7 @@
               :key="suggestion.suggestionId"
               @click="selectSearchSuggestion(suggestion)"
             >
-              {{ suggestion.suggestionText }}
+              {{ language === 'en' ? suggestion.suggestionText_en : suggestion.suggestionText_ms }}
             </button>
           </div>
 
@@ -1739,7 +1739,7 @@
     >
               <span class="status-pill green">{{ t('trending') }}</span>
               <h4>{{ doc.title }}</h4>
-              <p>{{ doc.summary }}</p>
+              <p>{{ language === 'en' ? doc.summary_en : doc.summary_ms }}</p>
 
               <div>
                 <span>{{ t('views') }}: {{ doc.viewCount }}</span>
@@ -1765,7 +1765,7 @@
             >
               <span class="status-pill amber">{{ t('frequentlyUsed') }}</span>
               <h4>{{ doc.title }}</h4>
-              <p>{{ doc.summary }}</p>
+              <p>{{ language === 'en' ? doc.summary_en : doc.summary_ms }}</p>
 
               <div>
                 <span>{{ doc.category }}</span>
@@ -4613,7 +4613,7 @@ async function loadSearchSuggestions() {
 }
 
 function selectSearchSuggestion(suggestion) {
-  smartQuery.value = suggestion.suggestionText
+  smartQuery.value = language.value === 'en' ? suggestion.suggestionText_en : suggestion.suggestionText_ms
   performSmartSearch()
 }
 

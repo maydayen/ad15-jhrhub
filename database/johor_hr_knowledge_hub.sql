@@ -63,8 +63,7 @@ CREATE TABLE users (
 CREATE TABLE documents (
   documentId INT AUTO_INCREMENT PRIMARY KEY,
   referenceNo VARCHAR(100) UNIQUE NOT NULL,
-  title_en VARCHAR(255) NOT NULL,
-  title_ms VARCHAR(255) NOT NULL,
+  title VARCHAR(255) NOT NULL,
   category VARCHAR(100) NOT NULL,
   type VARCHAR(50),
   status VARCHAR(50) DEFAULT 'Published',
@@ -494,7 +493,7 @@ VALUES
 (1, 1, 1, 'Daily', 'In-System');
 
 INSERT INTO documents
-(referenceNo, title_en, title_ms, category, type, status, access, effectiveDate, version, reason_en, reason_ms, summary_en, summary_ms, fileName, filePath, totalViews, totalDownloads)
+(referenceNo, title, category, type, status, access, effectiveDate, version, reason_en, reason_ms, summary_en, summary_ms, fileName, filePath, totalViews, totalDownloads)
 VALUES
 (
   'JHR-TASKA-FORM-2025',
