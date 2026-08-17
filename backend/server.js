@@ -93,14 +93,16 @@ app.get('/api/recommendations/:userId', async (req, res) => {
         r.status AS recommendationStatus,
         r.createdAt AS recommendationCreatedAt,
         d.referenceNo,
-        d.title,
+        d.title_en,
+        d.title_ms,
         d.category,
         d.type,
         d.status,
         d.access,
         d.effectiveDate,
         d.version,
-        d.summary,
+        d.summary_en,
+        d.summary_ms,
         d.fileName,
         d.filePath,
         d.totalViews,
@@ -127,7 +129,7 @@ app.post('/api/recommendations/refresh/:userId', async (req, res) => {
     const userId = req.params.userId
 
     const [documents] = await db.query(
-      `SELECT documentId, title, category, totalViews, totalDownloads
+      `SELECT documentId, title_en, title_ms, category, totalViews, totalDownloads
        FROM documents
        WHERE access != 'Restricted'
        ORDER BY totalViews DESC, totalDownloads DESC
@@ -346,7 +348,7 @@ app.post('/api/document-summaries', async (req, res) => {
 
     const doc = documents[0]
 
-    const summaryText = `Summary for ${doc.title}: ${doc.summary || 'This document contains HR policy information related to ' + doc.category + '.'}`
+    const summaryText = `Summary for ${doc.title_en || doc.title_ms}: ${doc.summary_en || doc.summary_ms || 'This document contains HR policy information related to ' + doc.category + '.'}`
 
     const [result] = await db.query(
       `INSERT INTO documentSummaries
@@ -642,10 +644,12 @@ app.get('/api/search', async (req, res) => {
 
     words.forEach((word, index) => {
       const condition = `
-        LOWER(d.title) LIKE ?
+        LOWER(d.title_en) LIKE ?
+        OR LOWER(d.title_ms) LIKE ?
         OR LOWER(d.category) LIKE ?
         OR LOWER(d.referenceNo) LIKE ?
-        OR LOWER(d.summary) LIKE ?
+        OR LOWER(d.summary_en) LIKE ?
+        OR LOWER(d.summary_ms) LIKE ?
         OR LOWER(d.type) LIKE ?
       `
 
@@ -656,7 +660,7 @@ app.get('/api/search', async (req, res) => {
       }
 
       const searchWord = `%${word}%`
-      params.push(searchWord, searchWord, searchWord, searchWord, searchWord)
+      params.push(searchWord, searchWord, searchWord, searchWord, searchWord, searchWord, searchWord)
     })
 
     let orderBy = 'relevanceScore DESC'
@@ -673,16 +677,16 @@ app.get('/api/search', async (req, res) => {
       `SELECT 
         d.*,
         (
-          CASE WHEN LOWER(d.title) LIKE ? THEN 40 ELSE 0 END +
+          CASE WHEN LOWER(d.title_en) LIKE ? OR LOWER(d.title_ms) LIKE ? THEN 40 ELSE 0 END +
           CASE WHEN LOWER(d.category) LIKE ? THEN 25 ELSE 0 END +
-          CASE WHEN LOWER(d.summary) LIKE ? THEN 20 ELSE 0 END +
+          CASE WHEN LOWER(d.summary_en) LIKE ? OR LOWER(d.summary_ms) LIKE ? THEN 20 ELSE 0 END +
           CASE WHEN LOWER(d.referenceNo) LIKE ? THEN 15 ELSE 0 END +
           CASE WHEN LOWER(d.type) LIKE ? THEN 10 ELSE 0 END
         ) AS relevanceScore,
         CASE
-          WHEN LOWER(d.title) LIKE ? THEN 'title'
+          WHEN LOWER(d.title_en) LIKE ? OR LOWER(d.title_ms) LIKE ? THEN 'title'
           WHEN LOWER(d.category) LIKE ? THEN 'category'
-          WHEN LOWER(d.summary) LIKE ? THEN 'summary'
+          WHEN LOWER(d.summary_en) LIKE ? OR LOWER(d.summary_ms) LIKE ? THEN 'summary'
           WHEN LOWER(d.referenceNo) LIKE ? THEN 'reference'
           WHEN LOWER(d.type) LIKE ? THEN 'type'
           ELSE 'general'
@@ -691,15 +695,16 @@ app.get('/api/search', async (req, res) => {
       WHERE ${whereClause}
       ORDER BY ${orderBy}`,
       [
-        `%${words[0]}%`,
-        `%${words[0]}%`,
-        `%${words[0]}%`,
-        `%${words[0]}%`,
-        `%${words[0]}%`,
-        `%${words[0]}%`,
-        `%${words[0]}%`,
-        `%${words[0]}%`,
-        `%${words[0]}%`,
+        `%${words[0]}%`, `%${words[0]}%`, 
+        `%${words[0]}%`, 
+        `%${words[0]}%`, `%${words[0]}%`, 
+        `%${words[0]}%`, 
+        `%${words[0]}%`, 
+        
+        `%${words[0]}%`, `%${words[0]}%`, 
+        `%${words[0]}%`, 
+        `%${words[0]}%`, `%${words[0]}%`, 
+        `%${words[0]}%`, 
         `%${words[0]}%`,
         ...params
       ]
@@ -768,10 +773,10 @@ app.get('/api/search-suggestions', async (req, res) => {
       `SELECT *
        FROM searchSuggestions
        WHERE isActive = 1
-       AND suggestionText LIKE ?
+       AND (suggestionText_en LIKE ? OR suggestionText_ms LIKE ?)
        ORDER BY usageCount DESC, updatedAt DESC
        LIMIT 6`,
-      [searchKeyword]
+      [searchKeyword, searchKeyword]
     )
 
     res.json(rows)
@@ -862,14 +867,16 @@ app.get('/api/saved-documents/:userId', async (req, res) => {
         s.documentId,
         s.savedAt,
         d.referenceNo,
-        d.title,
+        d.title_en,
+        d.title_ms,
         d.category,
         d.type,
         d.status,
         d.access,
         d.effectiveDate,
         d.version,
-        d.summary,
+        d.summary_en,
+        d.summary_ms,
         d.fileName,
         d.filePath,
         COALESCE(n.noteId, NULL) AS noteId,
