@@ -2348,7 +2348,7 @@ onMounted(() => {
 }) */
 
 const documents = ref([])
-const currentUserId = 2
+const currentUserId = 1
 
 const selectedDoc = ref({
   documentId: null,
@@ -2407,8 +2407,7 @@ async function loadUsers() {
 
     users.value = await response.json()
   } catch (error) {
-    console.error(error)
-    showToast('Failed to load users from database.', 'error')
+    console.error('Silently failed to load users:', error)
   }
 }
 
@@ -2508,8 +2507,7 @@ async function loadNotifications() {
 
     notifications.value = await response.json()
   } catch (error) {
-    console.error(error)
-    toast.value = 'Failed to load notifications from database.'
+    console.error('Silently failed to load notification preferences:', error)
   }
 }
 
