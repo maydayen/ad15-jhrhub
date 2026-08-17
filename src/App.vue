@@ -219,11 +219,6 @@
               <p>{{ language === 'en' ? selectedDoc.summary_en : selectedDoc.summary_ms }}</p>
             </div>
 
-            <div class="public-summary-box">
-              <h4>{{ t('prototypeNote') }}</h4>
-              <p>{{ t('prototypeNoteText') }}</p>
-            </div>
-
             <div class="button-row">
               <button class="primary" @click="publicDetailsModalOpen = false">
                 {{ t('backToPublicPortal') }}
