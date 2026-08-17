@@ -1717,8 +1717,8 @@
 
           <div class="faq-list">
             <details v-for="faq in faqs" :key="faq.id" open>
-              <summary>{{ faq.question }}</summary>
-              <p>{{ faq.answer }}</p>
+              <summary>{{ language === 'en' ? faq.question_en : faq.question_ms }}</summary>
+              <p>{{ language === 'en' ? faq.answer_en : faq.answer_ms }}</p>
             </details>
           </div>
         </div>
