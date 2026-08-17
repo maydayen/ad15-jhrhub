@@ -73,8 +73,8 @@
             />
 
             <select v-model="category">
-              <option v-for="item in categories" :key="item">
-                {{ item }}
+              <option v-for="item in categories" :key="item" :value="item">
+                {{ item === 'All' ? (language === 'en' ? 'All' : 'Semua') : tv(item) }}
               </option>
             </select>
           </div>
@@ -86,7 +86,7 @@
               :class="category === item ? 'chip selected' : 'chip'"
               @click="category = item"
             >
-              {{ item }}
+              {{ item === 'All' ? (language === 'en' ? 'All' : 'Semua') : tv(item) }}
             </button>
           </div>
         </div>
@@ -109,15 +109,15 @@
             </div>
             <div>
               <dt>{{ t('category') }}</dt>
-              <dd>{{ selectedDoc.category }}</dd>
+              <dd>{{ tv(selectedDoc.category) }}</dd>
             </div>
             <div>
               <dt>{{ t('type') }}</dt>
-              <dd>{{ selectedDoc.type }}</dd>
+              <dd>{{ tv(selectedDoc.type) }}</dd>
             </div>
             <div>
               <dt>{{ t('status') }}</dt>
-              <dd>{{ selectedDoc.status }}</dd>
+              <dd>{{ tv(selectedDoc.status) }}</dd>
             </div>
           </dl>
 
@@ -154,8 +154,8 @@
               <p>{{ doc.referenceNo }}</p>
 
               <div>
-                <span>{{ doc.category }}</span>
-                <span>{{ doc.type }}</span>
+                <span>{{ tv(doc.category) }}</span>
+                <span>{{ tv(doc.type) }}</span>
               </div>
             </button>
 
