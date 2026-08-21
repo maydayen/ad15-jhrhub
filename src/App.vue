@@ -2766,7 +2766,6 @@ const translations = {
     question: 'Question',
 
     // Temporary email example keys
-    'user@johor.gov.my': 'user@johor.gov.my',
     'admin@johor.gov.my': 'admin@johor.gov.my',
 
     // Navigation
@@ -2777,6 +2776,13 @@ const translations = {
     navSmart: 'Smart Support',
     navPersonal: 'Notifications & Saved',
     navAdmin: 'Admin Workspace',
+
+    catAll: 'All',
+    catStaffBenefits: 'Staff Benefits',
+    catPromotion: 'Promotion',
+    catOverseasTravel: 'Overseas Travel',
+    catContractService: 'Contract Service',
+    catPromotionAndDiscipline: 'Promotion and Discipline',
 
     // Public Portal
     guestAccess: 'Guest Access',
@@ -3209,8 +3215,14 @@ const translations = {
     question: 'Soalan',
 
     // Temporary email example keys
-    'user@johor.gov.my': 'user@johor.gov.my',
     'admin@johor.gov.my': 'admin@johor.gov.my',
+
+    catAll: 'Semua',
+    catStaffBenefits: 'Manfaat Staf',
+    catPromotion: 'Kenaikan Pangkat',
+    catOverseasTravel: 'Perjalanan Luar Negara',
+    catContractService: 'Perkhidmatan Kontrak',
+    catPromotionAndDiscipline: 'Kenaikan Pangkat dan Tatatertib',
 
     // Navigation
     navPublic: 'Portal Awam',
