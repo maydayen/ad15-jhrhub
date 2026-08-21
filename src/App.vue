@@ -74,7 +74,7 @@
 
             <select v-model="category">
               <option v-for="item in categories" :key="item" :value="item">
-                {{ item === 'All' ? (language === 'en' ? 'All' : 'Semua') : tv(item) }}
+                {{ getCategoryLabel(item) }}
               </option>
             </select>
           </div>
@@ -86,7 +86,7 @@
               :class="category === item ? 'chip selected' : 'chip'"
               @click="category = item"
             >
-              {{ item === 'All' ? (language === 'en' ? 'All' : 'Semua') : tv(item) }}
+              {{ getCategoryLabel(item) }}
             </button>
           </div>
         </div>
@@ -2327,20 +2327,17 @@ function useLocalStorage(key, defaultValue) {
     }
   }
 
-/* const documents = ref([])
-
-async function loadDocuments() {
-  try {
-    const response = await fetch('http://localhost:3000/api/documents')
-    documents.value = await response.json()
-  } catch (error) {
-    toast.value = 'Failed to load documents from database.'
+function getCategoryLabel(item) {
+  const map = {
+    'All': 'catAll',
+    'Staff Benefits': 'catStaffBenefits',
+    'Promotion': 'catPromotion',
+    'Overseas Travel': 'catOverseasTravel',
+    'Contract Service': 'catContractService',
+    'Promotion and Discipline': 'catPromotionAndDiscipline'
   }
+  return t(map[item] || item)
 }
-
-onMounted(() => {
-  loadDocuments()
-}) */
 
 const documents = ref([])
 const currentUserId = 1
