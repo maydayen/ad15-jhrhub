@@ -4081,10 +4081,16 @@ function adminLogin() {
   }
 
   const loggedInAdmin = users.value.find(
-  (user) =>
-    user.email.toLowerCase() === adminLoginForm.value.email.toLowerCase() &&
-    user.role.toLowerCase().includes('administrator')
+    (user) =>
+      user.email.toLowerCase() === adminLoginForm.value.email.toLowerCase() &&
+      user.role.toLowerCase().includes('administrator')
   )
+
+  // SAFEGUARD: Stop crashing if admin is missing or not loaded yet
+  if (!loggedInAdmin) {
+    showToast('Admin account not found. Please check your email or database roles.', 'error')
+    return
+  }
 
   profileForm.value = {
     name: loggedInAdmin.name,
@@ -4099,38 +4105,11 @@ function adminLogin() {
   addLog('Admin login', 'Admin Authentication', 'Success', loggedInAdmin.name)
 }
 
-function registerUser() {
-  if (!registerForm.value.name || !registerForm.value.email || !registerForm.value.password) {
-    showToast('Please complete name, email and password.', 'info')
-    return
-  }
+
 
   const now = getCurrentDateTime()
 
-  const newUser = {
-    id: `USR${Date.now()}`,
-    name: registerForm.value.name,
-    email: registerForm.value.email,
-    department: registerForm.value.department || 'Not assigned',
-    designation: registerForm.value.designation || 'Not assigned',
-    role: 'Registered User',
-    status: 'Active',
-    created_at: now,
-    updated_at: now
-  }
-  users.value.unshift(newUser)
-
-  registerForm.value = {
-    name: '',
-    email: '',
-    department: '',
-    designation: '',
-    password: ''
-  }
-
-  showToast('Registration submitted successfully. New user is added to admin table.', 'success')
-  addLog('Registered new account', 'Registration', 'Success', newUser.name)
-}
+ 
 
 function sendResetLink() {
   if (!resetForm.value.email) {
