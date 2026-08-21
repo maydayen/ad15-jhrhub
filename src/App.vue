@@ -2419,7 +2419,6 @@ async function loadRecommendations() {
   } catch (error) {
     console.error(error)
     smartResults.value = documents.value.filter((doc) => doc.access !== 'Restricted')
-    toast.value = 'Failed to load recommendations from database.'
   }
 }
 
@@ -2811,9 +2810,9 @@ const translations = {
     version: 'Version',
 
     // Auth
-    registrationLogin: 'Registration and Login',
+    registrationLogin: 'Login',
     authTitle: 'Secure access using official Johor government email.',
-    authDesc: 'Users can register, log in, reset password and use MFA protection.',
+    authDesc: 'Users can log in, reset password and use MFA protection.',
     sessionControl: 'Session control',
     extraProtection: 'Extra protection',
     failedLoginHandling: 'Failed login handling',
@@ -2825,22 +2824,6 @@ const translations = {
     mfaCode: 'MFA Code',
     mfaPlaceholder: '6-digit code if enabled',
     forgotPassword: 'Forgot password?',
-    registerAccount: 'Register Account',
-    registerDesc: 'Create account using required profile information.',
-    fullName: 'Full Name',
-    fullNamePlaceholder: 'Enter full name',
-    enterFullName: 'Enter full name',
-    enterGovernmentEmail: 'Enter government email',
-    enterAdminEmail: 'Enter admin email',
-    enterDepartment: 'Enter department',
-    enterDesignation: 'Enter designation',
-    designationLevel: 'Designation Level',
-    departmentPlaceholder: 'Human Resource Management Division',
-    designationPlaceholder: 'Officer / Assistant Officer',
-    passwordPlaceholder: 'Minimum 8 characters',
-    enterPassword: 'Enter password',
-    enterAdminPassword: 'Enter admin password',
-    submitRegistration: 'Submit Registration',
     adminLoginAccount: 'Administrator Login Account',
     adminLoginDesc: 'Dedicated admin login for management functions.',
     failedLoginProtection: 'Failed Login Protection',
@@ -3260,9 +3243,9 @@ const translations = {
     version: 'Versi',
 
     // Auth
-    registrationLogin: 'Pendaftaran dan Log Masuk',
+    registrationLogin: 'Log Masuk',
     authTitle: 'Akses selamat menggunakan emel rasmi Kerajaan Johor.',
-    authDesc: 'Pengguna boleh mendaftar, log masuk, menetapkan semula kata laluan dan menggunakan perlindungan MFA.',
+    authDesc: 'Pengguna boleh log masuk, menetapkan semula kata laluan dan menggunakan perlindungan MFA.',
     sessionControl: 'Kawalan sesi',
     extraProtection: 'Perlindungan tambahan',
     failedLoginHandling: 'Pengendalian log masuk gagal',
@@ -3274,22 +3257,6 @@ const translations = {
     mfaCode: 'Kod MFA',
     mfaPlaceholder: 'Kod 6 digit jika diaktifkan',
     forgotPassword: 'Lupa kata laluan?',
-    registerAccount: 'Daftar Akaun',
-    registerDesc: 'Cipta akaun menggunakan maklumat profil yang diperlukan.',
-    fullName: 'Nama Penuh',
-    fullNamePlaceholder: 'Masukkan nama penuh',
-    enterFullName: 'Masukkan nama penuh',
-    enterGovernmentEmail: 'Masukkan emel kerajaan',
-    enterAdminEmail: 'Masukkan emel pentadbir',
-    enterDepartment: 'Masukkan jabatan',
-    enterDesignation: 'Masukkan jawatan',
-    designationLevel: 'Tahap Jawatan',
-    departmentPlaceholder: 'Bahagian Pengurusan Sumber Manusia',
-    designationPlaceholder: 'Pegawai / Penolong Pegawai',
-    passwordPlaceholder: 'Minimum 8 aksara',
-    enterPassword: 'Masukkan kata laluan',
-    enterAdminPassword: 'Masukkan kata laluan pentadbir',
-    submitRegistration: 'Hantar Pendaftaran',
     adminLoginAccount: 'Akaun Log Masuk Pentadbir',
     adminLoginDesc: 'Log masuk khas pentadbir untuk fungsi pengurusan.',
     enterCurrentPassword: 'Masukkan kata laluan semasa',
